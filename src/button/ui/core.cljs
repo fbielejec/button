@@ -20,7 +20,6 @@
     [district.ui.web3]
     [district.ui.window-size]
     [mount.core :as mount]
-    [print.foo :include-macros true]
     [re-frisk.core :refer [enable-re-frisk!]]))
 
 (def debug? ^boolean js/goog.DEBUG)

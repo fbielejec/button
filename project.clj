@@ -10,6 +10,9 @@
                  [org.clojure/clojurescript "1.9.946"]
                  [re-frame "0.10.5"]
                  [district0x/district-web3-utils "1.0.2"]
+                 [district0x/district-server-middleware-logging "1.0.0"]
+                 [district0x/district-server-smart-contracts "1.0.8"]
+                 [district0x/district-server-web3-watcher "1.0.2"]
                  [district0x/district-ui-web3 "1.0.1"]
                  [district0x/district-ui-web3-account-balances "1.0.2"]
                  [district0x/district-ui-web3-accounts "1.0.5"]
@@ -69,7 +72,17 @@
                              [lein-figwheel "0.5.14"]
                              [lein-cljsbuild "1.1.7"]]}}
 
-  :cljsbuild {:builds [{:id "dev-ui"
+  :cljsbuild {:builds [{:id "dev-server"
+                        :source-paths ["src/button/server" "src/button/shared"]
+                        :figwheel {:on-jsload "button.server.dev/on-jsload"}
+                        :compiler {:main "button.server.dev"
+                                   :output-to "dev-server/button.js"
+                                   :output-dir "dev-server"
+                                   :target :nodejs
+                                   :optimizations :none
+                                   :closure-defines {goog.DEBUG true}
+                                   :source-map true}}
+                       {:id "dev-ui"
                         :source-paths ["src"]
                         :figwheel {:on-jsload "district.ui.reagent-render/rerender"}
                         :compiler {:main "district.ui.core"

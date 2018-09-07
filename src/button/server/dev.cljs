@@ -21,8 +21,7 @@
             [district.server.web3-watcher]
             [goog.date.Date]
             [graphql-query.core :refer [graphql-query]]          
-            [mount.core :as mount]
-            [print.foo :include-macros true]))
+            [mount.core :as mount]))
 
 (nodejs/enable-util-print!)
 
