@@ -17,7 +17,16 @@
                  [district0x/district-ui-web3-account-balances "1.0.2"]
                  [district0x/district-ui-web3-accounts "1.0.5"]
                  [district0x/district-ui-web3-balances "1.0.2"]
+                 [district0x/district-ui-router "1.0.4"]
+                 [district0x/district-ui-graphql "1.0.6"]
+                 [district0x/district-ui-now "1.0.2"]
+                 [district0x/district-ui-router-google-analytics "1.0.1"]
+                 [district0x/district-ui-smart-contracts "1.0.5"]
+                 [district0x/district-ui-web3-sync-now "1.0.3"]
+                 [district0x/district-ui-web3-tx-log "1.0.2"]
+                 [district0x/district-ui-web3-tx "1.0.9"]
                  [district0x/district-server-web3 "1.0.1"]
+                 [district0x/district-ui-window-size "1.0.1"]
                  [district0x/district-server-logging "1.0.2"]
                  [district0x/district-server-config "1.0.1"]
                  [district0x/district-server-db "1.0.3"]
@@ -28,7 +37,11 @@
                [org.clojure/clojurescript]]
 
   :plugins [[lein-solc "1.0.1-1"]
-            [lein-garden "0.3.0"]]
+            [lein-garden "0.3.0"]
+            [lein-less "1.7.5"]]
+
+  :less {:source-paths ["resources/public/css"]
+         :target-path "resources/public/css"}
 
   :npm {:dependencies [[chalk "2.3.0"]
                        [express-graphql "./resources/libs/express-graphql-0.6.13.tgz"]
@@ -85,7 +98,7 @@
                        {:id "dev-ui"
                         :source-paths ["src"]
                         :figwheel {:on-jsload "district.ui.reagent-render/rerender"}
-                        :compiler {:main "district.ui.core"
+                        :compiler {:main "button.ui.core"
                                    :output-to "resources/public/js/compiled/app.js"
                                    :output-dir "resources/public/js/compiled/out"
                                    :asset-path "js/compiled/out"
