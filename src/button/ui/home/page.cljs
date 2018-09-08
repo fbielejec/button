@@ -9,7 +9,8 @@
 
 (defmethod page :route/home []
   (fn []
-    [:div
-     [button/component]
-     [counter/component]
-     [charts/tile-chart]]))
+    [:div.outermost-layout
+     [:div.main-layout
+      [button/component]
+      [counter/component]]]))
+

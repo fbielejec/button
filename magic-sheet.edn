@@ -8,16 +8,6 @@
   :result-type :as-value,
   :code "(:last-press-block-number @@button.server.db/button-db)",
   :x 420.0},
- "1d6232bc-15a7-47e6-8176-9650a5f245bf"
- {:y 383.0,
-  :key "T",
-  :w 1298.0,
-  :title "Tokens",
-  :h 438.0,
-  :node-id "1d6232bc-15a7-47e6-8176-9650a5f245bf",
-  :result-type :as-table,
-  :code "(:tokens @@button.server.db/button-db)",
-  :x 17.0},
  "4b6ec65c-f099-4a97-a143-6a0ff5736b8c"
  {:y 126.0,
   :key "M",
@@ -28,4 +18,25 @@
   :result-type nil,
   :code
   "(button.server.syncer/process-event :contract/button-token\n                                    {:event-type :contract-minted-event\n                                     :token-id \"${token-id}\" \n                                     :number ${number} \n                                     :weight ${weight} \n                                     :last-press-block-number ${last-press-block-number} \n                                     :owner-address \"${owner-address}\" \n                                     :image-hash \"${image-hash}\" })",
-  :x 937.0}}
+  :x 937.0},
+ "2bb2a4fd-f647-4086-8bbb-82c56a43404c"
+ {:y 383.0,
+  :key "T",
+  :w 1335.0,
+  :title "Tokens",
+  :h 381.0,
+  :node-id "2bb2a4fd-f647-4086-8bbb-82c56a43404c",
+  :result-type :as-table,
+  :code
+  "(-> (district.server.graphql/run-query {:queries [[:all-tokens [:button-token/token-id\n                                                                                :button-token/number\n                                                                                :button-token/owner-address\n                                                                                :button-token/weight\n                                                                                :button-token/image-hash\n                                                                                ]]]})\n                       :data :all-tokens)",
+  :x 69.0},
+ "9ef00b73-7b3f-43a0-9b37-293071fa0c67"
+ {:y 321.0,
+  :key "G",
+  :w 220.0,
+  :title "Gen tokens",
+  :h 55.0,
+  :node-id "9ef00b73-7b3f-43a0-9b37-293071fa0c67",
+  :result-type nil,
+  :code "(button.server.dev/gen-dummy-data)",
+  :x 66.0}}

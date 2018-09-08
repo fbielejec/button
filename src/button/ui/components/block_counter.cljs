@@ -2,5 +2,4 @@
 
 (defn component []
   [:div.block-counter
-   [:span
-    [:h1] 4]])
+   [:span 4]])
