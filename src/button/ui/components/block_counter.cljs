@@ -3,5 +3,12 @@
             [button.ui.subs :as subs]))
 
 (defn component []
-  [:div.block-counter
-   [:span @(re-frame/subscribe [::subs/count-since-last-pressed-block])]])
+  (fn [data]
+    (let [last-pressed-block-number (:last-press-block-number data)
+          current-block-number @(re-frame/subscribe [::subs/current-block-number])]
+      (js/console.log "lpbn:" last-pressed-block-number)
+      (js/console.log "current block number:" current-block-number)
+      [:div.block-counter
+       [:span
+        (- current-block-number
+           last-pressed-block-number)]])))

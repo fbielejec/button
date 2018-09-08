@@ -17,20 +17,20 @@
             [district.server.logging :refer [logging]]
             [district.server.middleware.logging :refer [logging-middlewares]]
             [district.server.smart-contracts]
-            [button.shared.smart-contracts]             
+            [button.shared.smart-contracts]
             [button.server.db]
             [button.server.syncer]
             [button.server.deployer]
             [district.server.web3 :refer [web3]]
             [district.server.web3-watcher]
             [goog.date.Date]
-            [graphql-query.core :refer [graphql-query]]          
+            [graphql-query.core :refer [graphql-query]]
             [mount.core :as mount]
             [button.shared.graphql-schema :refer [graphql-schema]]
             [button.server.graphql-resolvers :refer [resolvers-map]]
             [cljs.spec.alpha :as s]
             [cljs.spec.gen.alpha :as sg]
-            [clojure.test.check.generators])) 
+            [clojure.test.check.generators]))
 
 (nodejs/enable-util-print!)
 
@@ -49,10 +49,10 @@
   (mount/stop #'district.server.web3/web3
               #'district.server.smart-contracts/smart-contracts)
   (mount/start-with-args (merge
-                           (mount/args)
-                           {:web3 {:port 8545}
-                            :deployer {:write? true
-                                       :gas-price (web3/to-wei 4 :gwei)}})
+                          (mount/args)
+                          {:web3 {:port 8545}
+                           :deployer {:write? true
+                                      :gas-price (web3/to-wei 4 :gwei)}})
                          #'district.server.web3/web3
                          #'district.server.smart-contracts/smart-contracts))
 
@@ -73,7 +73,7 @@
       pprint/pprint))
 
 (defn -main [& _]
-  (-> (mount/with-args 
+  (-> (mount/with-args
         {:config {:default {:logging {:level "info"
                                       :console? true}
                             :graphql {:port 6300
@@ -88,8 +88,8 @@
                             :web3 {:port 8549}
                             :smart-contracts {:contracts-var #'button.shared.smart-contracts/smart-contracts
                                               :print-gas-usage? true
-                                              :auto-mining? false}}}})
-      (mount/except [#'button.server.deployer/deployer]) 
+                                              :auto-mining? true}}}})
+      (mount/except [#'button.server.deployer/deployer])
       (mount/start)
       pprint/pprint))
 
@@ -125,4 +125,3 @@
                                                          :gas 4000000})
 
 #_(district.server.smart-contracts/contract-call :button :Transfer {} "latest" (fn [& args] (println "GOT AN EVENT()" args)))
-

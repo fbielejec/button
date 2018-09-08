@@ -20,7 +20,7 @@
    [district.ui.web3-tx.events]
    [button.ui.home.page]
    [button.shared.graphql-schema :refer [graphql-schema]]
-   [button.ui.events :as button-events]
+   [button.ui.events :as events]
    [button.shared.routes :refer [routes]]
    [button.shared.smart-contracts :refer [smart-contracts]]
    [mount.core :as mount]
@@ -53,4 +53,5 @@
                 :graphql {:schema graphql-schema
                           :url "http://localhost:6300/graphql"}
                 #_#_:ipfs {:host "http://127.0.0.1:5001" :endpoint "/api/v0"}}))
-      (mount/start)))
+      (mount/start))
+  (re-frame/dispatch [::events/forward-to-timer]))

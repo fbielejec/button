@@ -3,6 +3,7 @@
             [cljs-web3.eth :as web3-eth]
             [cljs-web3.core :as web3]
             [district0x.re-frame.interval-fx]
+            [day8.re-frame.forward-events-fx]
             [district.ui.web3.queries :as web3-queries]
             [district.ui.web3.events :as web3-events]
             [district.ui.web3-tx.events :as web3-tx-events]
@@ -28,6 +29,7 @@
 (re-frame/reg-event-fx
  ::fetch-current-block-number
  (fn [{:keys [db]} [_ _]]
+   (js/console.log "Fetching current block number")
    {:web3/call {:web3 (web3-queries/web3 db)
                 :fns [{:fn cljs-web3.eth/block-number
                        :args []
@@ -46,9 +48,15 @@
 (re-frame/reg-event-fx
  ::forward-to-timer
  (fn []
-   {:register :my-forwarder
-    :events #{::web3-events/web3-created}
-    :dispatch-to [::start-poll-for-block-number]}))
+   {:forward-events
+    {:register :my-forwarder
+     :events #{::web3-events/web3-created}
+     :dispatch-to [::start-poll-for-block-number]}}))
+
+(re-frame/reg-event-fx
+ ::button-press-success
+ (fn [{:keys [db]} [_ _]]
+   (js/console.log "For great justice. The button was pressed.")))
 
 (re-frame/reg-event-fx
  ::button-pressed
@@ -59,14 +67,9 @@
                   :fn :press
                   :args []
                   :tx-opts {:from account :gas 4500000}
-                  :on-tx-hash [::tx-hash]
-                  :on-tx-hash-n [[::tx-hash]]
                   :on-tx-hash-error [::tx-hash-error]
-                  :on-tx-hash-error-n [[::tx-hash-error]]
-                  :on-tx-success [::tx-success]
-                  :on-tx-success-n [[::tx-success]]
-                  :on-tx-error [::tx-error]
-                  :on-tx-error-n [[::tx-error]]}]})))
+                  :on-tx-success [::button-press-success]
+                  :on-tx-error [::tx-error]}]})))
 
 (re-frame/reg-event-fx
  ::upload-image
@@ -95,4 +98,3 @@
                   :on-tx-success-n [[::tx-success]]
                   :on-tx-error [::tx-error]
                   :on-tx-error-n [[::tx-error]]}]})))
-
