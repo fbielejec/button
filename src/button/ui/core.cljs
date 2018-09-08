@@ -18,9 +18,11 @@
    [district.ui.web3]
    [district.ui.window-size]
    [button.ui.home.page]
+   [button.ui.events :as button-events]
    [button.shared.routes :refer [routes]]
    [mount.core :as mount]
-   [re-frisk.core :refer [enable-re-frisk!]]))
+   [re-frisk.core :refer [enable-re-frisk!]]
+   [re-frame.core :as re-frame]))
 
 (def debug? ^boolean js/goog.DEBUG)
 
