@@ -8,16 +8,16 @@
                       [:div {:id "tilechart"}])
     :component-did-mount (fn []
 
-                           ;; (prn (aget js/d3 "treemapBinary"))
+                           ;; (prn (js-keys js/d3))
 
                            (let [width 500
                                  height 500
-                                 data  {:name "rect"
-                                        :children [{:id 0 :value 50}
-                                                   {:id 1 :value 50}
-                                                   {:id 2 :value 50}
-                                                   {:id 3 :value 50}
-                                                   {:id 4 :value 50}]}
+                                 data (clj->js {:name "rect"
+                                                :children [{:id 0 :value 10}
+                                                           {:id 1 :value 20}
+                                                           {:id 2 :value 30}
+                                                           {:id 3 :value 40}
+                                                           {:id 4 :value 50}]})
                                  treemap (-> js/d3
                                              .treemap
                                              (.size (clj->js [width height]))
@@ -26,19 +26,19 @@
                                              (.tile (-> js/d3 .-treemapBinary)))
 
                                  tree (-> js/d3
-                                          (.hierarchy (clj->js data)))]
+                                          (.hierarchy data)
+                                          (.sum (fn [d]
+                                                  (aget d "value"))))]
 
-                             (-> tree
-                                 (.sum (fn [d]
-                                         (prn "DATA "(aget d "value"))
-                                         (aget d "value"))))
-
-                             (prn (-> tree .leaves))
+                             (prn (map #(aget % "x0")  (-> tree .leaves))
+                                  (map #(aget % "x1")  (-> tree .leaves))
+                                  (map #(aget % "y0")  (-> tree .leaves))
+                                  (map #(aget % "y1")  (-> tree .leaves)))
 
                              (-> js/d3
                                  (.select (str "#tilechart"))
                                  ;; (.append "svg")
-                                 (.attr "class" (str "tilechart"))
+                                 (.attr "class" "tilechart")
                                  (.attr "width" width)
                                  (.attr "height" height)
                                  (.selectAll ".node")
@@ -48,13 +48,11 @@
                                  (.attr "class" "node")
                                  (.style "background" "#ffffff")
 
-                                 (.attr "title" (fn [d] (aget d "data" "id")))
-
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
 
                                  (.style "top" (fn [d]
-                                                 (prn "y0" (aget d "y0") )
+                                                 ;; (prn "y0" (aget d "y0"))
                                                  (str (aget d "y0") "px")))
 
                                  (.style "width" (fn [d]
