@@ -7,22 +7,6 @@
             [district.ui.component.form.input :as inputs]
             [button.ui.events :as events]))
 
-#_(defn chart-tile [token-id]
-  [:div {:style {:background-color :red}}
-   [:input {:type :file
-            :id "file"
-            :on-change (fn [e]
-                         (let [files (-> e .-target .-files)
-                               f (aget files 0)]
-                           (let [url-reader (js/FileReader.)
-                                 ab-reader (js/FileReader.)]
-                             (set! (.-onload url-reader) (fn [e]
-                                                           (let [img-data (-> e .-target .-result)]
-                                                             ;; set img-data in src
-                                                             #_(.log js/console "Setting " img-data))))
-                             (.readAsDataURL url-reader f)
-                             (re-frame/dispatch [::events/upload-image f token-id]))))}]])
-
 (defn on-change [token-id]
   (fn [e]
     (let [files (-> e .-target .-files)
@@ -75,14 +59,14 @@
                                                     (str " user-owned-node"))))
                                  (.style "background" "#ffffff")
                                  (.style "outline-width" "3px")
-                                 (.style "outline-color" (fn [d]
+                                 (.style "background-color" (fn [d]
 
-                                                           (prn (aget d "data" "value"))
+                                                              (prn (aget d "data" "value"))
 
-                                                           (if (= active-account (aget d "data" "owner"))
-                                                             "#66CC66"
-                                                             (color-scale
-                                                              (aget d "data" "value")))))
+                                                              (if (= active-account (aget d "data" "owner"))
+                                                                "#66CC66"
+                                                                (color-scale
+                                                                 (aget d "data" "value")))))
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
                                  (.style "top" (fn [d]
@@ -96,35 +80,31 @@
 
 
                                  (.append "label")
-                                 (.attr "for" "file-input")
+                                 (.attr "for" (fn [d]
+                                                (aget d "data" "id")))
 
                                  (.append "img")
-                                 (.attr "src"  "https://news.bitcoin.com/wp-content/uploads/2016/10/RAREPEPEcover.jpg")
+                                 (.attr "src"  (fn [d]
+                                                 (str "https://gateway.ipfs.io/ipfs/" (aget d "data" "image-hash"))))
                                  (.style "width" "100%")
-                                 (.style "height" "100%")
-
-
-                                 ;; (.append "input")
-                                 ;; (.attr "type" "file")
-                                 ;; (.attr "on-change" (fn [d]  (prn "click")))
-
-                                 )
+                                 (.style "height" "100%"))
 
                              (-> js/d3
                                  (.selectAll ".user-owned-node" )
                                  (.append "input")
-                                 (.attr "id" "file-input")
+                                 (.attr "id" (fn [d]
+                                               (aget d "data" "id")))
                                  (.attr "type" "file")
 
                                  (.attr "on-change" (fn [d]
 
-                                                      ;; (prn "TOKEN ID" (aget d "data" "token-id"))
+                                                      ;; (prn "TOKEN ID" (aget d "data" "id"))
 
-                                                      (on-change (aget d "data" "token-id"))
+                                                      (on-change (aget d "data" "id"))
 
-                                                      
+
                                                       ))
-                                 
+
 
                                  )
 
@@ -148,10 +128,10 @@
     (when-not (:graphql/loading? @response)
       (let [children (reduce
                       (fn [children {:keys [:button-token/token-id :button-token/owner-address :button-token/weight :button-token/image-hash] }]
-                        (conj children {:id image-hash
+                        (conj children {:id token-id
                                         :value weight
                                         :owner owner-address
-                                        :token-id token-id}))
+                                        :image-hash image-hash}))
                       []
                       (-> @response :all-tokens))]
         [tile-chart-component {:children children
