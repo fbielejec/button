@@ -45,8 +45,14 @@
                        (:button/db (mount/args))))
   :stop (stop))
 
+(defn set-last-press-block-number [number]
+  (swap! @button-db assoc :last-press-block-number number))
+
 (defn get-last-press-block-number []
   (:last-press-block-number @@button-db))
+
+(defn add-token [token]
+  (swap! @button-db update-in [:tokens] conj token))
 
 (defn get-all-tokens []
   (:tokens @@button-db))

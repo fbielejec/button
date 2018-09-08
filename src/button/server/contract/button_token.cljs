@@ -1,4 +1,4 @@
-(ns button.server.contract.dank-token
+(ns button.server.contract.button-token
   (:require
     [camel-snake-kebab.core :as cs :include-macros true]
     ;; [cljs-solidity-sha3.core :refer [solidity-sha3]]
