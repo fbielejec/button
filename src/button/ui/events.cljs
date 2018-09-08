@@ -4,7 +4,11 @@
             [cljs-web3.core :as web3]
             [district0x.re-frame.interval-fx]
             [district.ui.web3.queries :as web3-queries]
-            [district.ui.web3.events :as web3-events]))
+            [district.ui.web3.events :as web3-events]
+            [district.ui.web3-tx.events :as web3-tx-events]
+            [district.ui.smart-contracts.events :as contract-events]
+            [district.ui.web3-accounts.queries :as account-queries]
+            [district.ui.smart-contracts.queries :as contract-queries]))
 
 (re-frame/reg-event-db
  ::current-block-number
@@ -45,3 +49,21 @@
    {:register :my-forwarder
     :events #{::web3-events/web3-created}
     :dispatch-to [::start-poll-for-block-number]}))
+
+(re-frame/reg-event-fx
+ ::button-pressed
+ (fn [{:keys [db]} [_ _]]
+   (let [account (account-queries/active-account db)]
+     {:dispatch [::web3-tx-events/send-tx
+                 {:instance (contract-queries/instance db :button)
+                  :fn :press
+                  :args []
+                  :tx-opts {:from account :gas 4500000}
+                  :on-tx-hash [::tx-hash]
+                  :on-tx-hash-n [[::tx-hash]]
+                  :on-tx-hash-error [::tx-hash-error]
+                  :on-tx-hash-error-n [[::tx-hash-error]]
+                  :on-tx-success [::tx-success]
+                  :on-tx-success-n [[::tx-success]]
+                  :on-tx-error [::tx-error]
+                  :on-tx-error-n [[::tx-error]]}]})))
