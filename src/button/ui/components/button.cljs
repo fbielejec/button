@@ -1,6 +1,6 @@
 (ns button.ui.components.button
   (:require [reagent.core :as r]))
 
-(defn button []
-  [:div.center
+(defn component []
+  [:div.button-center
    [:div.select-button]])

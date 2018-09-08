@@ -1,0 +1,54 @@
+@button-size: 200px;
+@dropSize: 15px;
+@color: #f74d4d;
+@color2: #f86569;
+@dropColor: #e24f4f;
+
+.button-center {
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    margin-left: -@button-size/2;
+    margin-top: -@button-size/2;
+
+    .select-button {
+        .bigRedButton(@button-size, @dropSize, @color, @color2, @dropColor);
+    }
+}
+
+.bigRedButton(@button-size, @dropSize, @color, @color2, @dropColor) {
+    width: @button-size;
+    height: @button-size - @button-size/10;
+    line-height: @button-size;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 50%;
+    background: @color;
+
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, @color), color-stop(100%, @color2));
+
+    background-image: -moz-gradient(linear, left top, left bottom, color-stop(0%,@color), color-stop(100%,@color2));
+
+    box-shadow: 0 @dropSize @dropColor;
+
+    &:active {
+        box-shadow: 0 0 @dropColor;
+        .translate(0px, @dropSize);
+        .transition( 0.1s all ease-out);
+    }
+}
+
+.translate (@x, @y:0) {
+    -webkit-transform: translate(@x, @y);
+    -moz-transform:    translate(@x, @y);
+    -ms-transform:     translate(@x, @y);
+    -o-transform:      translate(@x, @y);
+}
+
+.transition (@transition) {
+    -webkit-transition: @transition;
+    -moz-transition:    @transition;
+    -ms-transition:     @transition;
+    -o-transition:      @transition;
+    transition:        @transition;
+}
