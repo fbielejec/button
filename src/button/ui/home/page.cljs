@@ -12,5 +12,5 @@
     [:div.outermost-layout
      [:div.main-layout
       [button/component]
-      [counter/component]]]))
-
+      [counter/component]
+      [charts/tile-chart]]]))
