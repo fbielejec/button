@@ -28,6 +28,7 @@
                  [district0x/district-ui-web3-tx "1.0.9"]
                  [district0x/district-server-web3 "1.0.1"]
                  [district0x/district-ui-window-size "1.0.1"]
+                 [district0x/re-frame-interval-fx "1.0.2"]
                  [district0x/district-server-logging "1.0.2"]
                  [district0x/district-server-config "1.0.1"]
                  [district0x/district-server-db "1.0.3"]
