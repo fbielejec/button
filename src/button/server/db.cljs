@@ -34,7 +34,7 @@
      [:challenge/claimed-reward-on :unsigned :integer default-nil]])
 
 (defn start [args]
-  (atom {:last-block 0
+  (atom {:last-press-block-number 0
          :tokens []}))
 
 (defn stop []
@@ -44,6 +44,9 @@
   :start (start (merge (:button/db @config)
                        (:button/db (mount/args))))
   :stop (stop))
+
+(defn get-last-press-block-number []
+  (:last-press-block-number @@button-db))
 
 (defn get-all-tokens []
   (:tokens @@button-db))

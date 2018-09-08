@@ -19,8 +19,12 @@
 
 (def enum graphql-utils/kw->gql-name)
 
-(defn all-tokens-query-resolver [_ _]
+(defn last-press-block-number-resolver [_ _]
   (button-db/get-all-tokens))
 
+(defn all-tokens-query-resolver [_ _]
+  (button-db/get-last-press-block-number))
+
 (def resolvers-map
-  {:Query {:meme all-tokens-query-resolver}})
+  {:Query {:meme all-tokens-query-resolver
+           :last-press-block-number last-press-block-number-resolver}})

@@ -7,7 +7,7 @@
   type Query {
 
     allTokens(): [ButtonToken]
-
+    lastPressBlockNumber(): Float
   }
 
   type ButtonToken {
