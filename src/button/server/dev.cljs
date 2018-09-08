@@ -88,7 +88,7 @@
                             :web3 {:port 8549}
                             :smart-contracts {:contracts-var #'button.shared.smart-contracts/smart-contracts
                                               :print-gas-usage? true
-                                              :auto-mining? true}}}})
+                                              :auto-mining? false}}}})
       (mount/except [#'button.server.deployer/deployer]) 
       (mount/start)
       pprint/pprint))

@@ -3,7 +3,7 @@
    [cljs.spec.alpha :as s]
    [clojure.string :as str]
    [district.ui.component.router :refer [router]]
-   #_[district.ui.graphql]
+   [district.ui.graphql]
    [district.ui.now]
    [district.ui.reagent-render]
    [district.ui.router-google-analytics]
@@ -18,6 +18,7 @@
    [district.ui.web3]
    [district.ui.window-size]
    [button.ui.home.page]
+   [button.shared.graphql-schema :refer [graphql-schema]]
    [button.ui.events :as button-events]
    [button.shared.routes :refer [routes]]
    [mount.core :as mount]
@@ -30,8 +31,6 @@
   (when debug?
     (enable-console-print!)
     (enable-re-frisk!)))
-
-#_(def skipped-contracts [:ds-guard :param-change-registry-db :meme-registry-db :minime-token-factory])
 
 (defn ^:export init []
   (s/check-asserts debug?)
@@ -48,7 +47,7 @@
                 :router {:routes routes
                          :default-route :route/home}
                 #_#_:router-google-analytics {:enabled? (not debug?)}
-                #_#_:graphql {:schema graphql-schema
-                              :url "http://localhost:6300/graphql"}
+                :graphql {:schema graphql-schema
+                          :url "http://localhost:6300/graphql"}
                 #_#_:ipfs {:host "http://127.0.0.1:5001" :endpoint "/api/v0"}}))
       (mount/start)))

@@ -1,64 +1,59 @@
 (ns button.ui.components.charts
   (:require [cljsjs.d3]
+            [district.ui.graphql.subs :as gql]
+            [re-frame.core :as re-frame]
             [reagent.core :as r]))
 
-(defn tile-chart []
+(defn tile-chart-component [children]
   (r/create-class
-   {:reagent-render (fn []
+   {:reagent-render (fn [children]
                       [:div {:id "tilechart"}])
     :component-did-mount (fn []
-
-                           ;; (prn (js-keys js/d3))
-
                            (let [width 500
                                  height 500
                                  data (clj->js {:name "rect"
-                                                :children [{:id 0 :value 10}
-                                                           {:id 1 :value 20}
-                                                           {:id 2 :value 30}
-                                                           {:id 3 :value 40}
-                                                           {:id 4 :value 50}]})
+                                                :children children})
                                  treemap (-> js/d3
                                              .treemap
                                              (.size (clj->js [width height]))
                                              (.padding 15)
                                              (.round true)
                                              (.tile (-> js/d3 .-treemapBinary)))
-
                                  tree (-> js/d3
                                           (.hierarchy data)
                                           (.sum (fn [d]
                                                   (aget d "value"))))]
-
-                             (prn (map #(aget % "x0")  (-> tree .leaves))
-                                  (map #(aget % "x1")  (-> tree .leaves))
-                                  (map #(aget % "y0")  (-> tree .leaves))
-                                  (map #(aget % "y1")  (-> tree .leaves)))
-
                              (treemap tree)
-
                              (-> js/d3
                                  (.select (str "#tilechart"))
                                  (.selectAll ".node")
                                  (.data (-> tree .leaves))
                                  (.enter)
                                  (.append "div")
-
                                  (.attr "class" "tilechart")
                                  (.attr "class" "node")
                                  (.style "background" "#ffffff")
-
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
-
                                  (.style "top" (fn [d]
-                                                 ;; (prn "y0" (aget d "y0"))
                                                  (str (aget d "y0") "px")))
-
                                  (.style "width" (fn [d]
                                                    (str (- (aget d "x1")
                                                            (aget d "x0")) "px")))
-
                                  (.style "height" (fn [d]
                                                     (str (- (aget d "y1")
                                                             (aget d "y0")) "px"))))))}))
+
+(defn tile-chart []
+  (let [response (re-frame/subscribe [::gql/query {:queries [[:all-tokens [:button-token/owner-address
+                                                                           :button-token/weight
+                                                                           :button-token/image-hash]]]}])]
+    (when-not (:graphql/loading? @response)
+      (let [children (reduce
+                      (fn [children {:keys [:button-token/owner-address :button-token/weight :button-token/image-hash] }]
+                        (conj children {:id image-hash
+                                        :value weight
+                                        :owner owner-address}))
+                      []
+                      (-> @response :all-tokens))]
+        [tile-chart-component children]))))
