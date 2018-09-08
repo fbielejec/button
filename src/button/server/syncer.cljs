@@ -18,7 +18,7 @@
 (defn- last-block-number []
   (web3-eth/block-number @web3))
  
-(defmulti process-event (fn [contract-type ev] [contract-type (:event-type ev)]))
+(defmulti process-event (fn [contract-type ev] [contract-type (:event-type ev)])) 
 
 (defmethod process-event [:contract/button-token :contract-minted-event]
   [_ ev]
@@ -30,8 +30,7 @@
                            :button-token/owner-address owner-address
                            :button-token/weight weight
                            :button-token/image-hash image-hash})
-     
-     )))
+     (button-db/set-last-press-block-number last-press-block-number)))) 
 
 (defmethod process-event :default
   [k ev]
@@ -44,8 +43,7 @@
         ev (-> args
                ;; (assoc : (:address a))
                (assoc :event-type event-type)
-               (update :timestamp bn/number)
-)]
+               (update :timestamp bn/number))]
     (log/info (str contract-type " " event-type) {:ev ev :a a} ::dispatch-event) 
     (process-event contract-type ev)))
 

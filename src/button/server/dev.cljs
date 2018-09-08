@@ -18,6 +18,7 @@
             [district.server.middleware.logging :refer [logging-middlewares]]
             [district.server.smart-contracts]
             [button.server.db]
+            [button.server.syncer]
             [district.server.web3 :refer [web3]]
             [district.server.web3-watcher]
             [goog.date.Date]
