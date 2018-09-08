@@ -99,7 +99,10 @@
 (s/def :button-token/number pos-int?)
 (s/def :button-token/owner-address (s/with-gen (s/and string?
                                                       #(str/starts-with? % "0x"))
-                                     #(s/gen #{"0x5ed8cee6b63b1c6afce3ad7c92f4fd7e1b8fad9f"})))
+                                     #(s/gen #{"0x4c3f13898913f15f12f902d6480178484063a6fb"
+                                               "0xafcf1a2bc71acf041c93012a2e552e31026dfeab"
+                                               "0xc238fa6ccc9d226e2c49644b36914611319fc3ff"})))
+
 
 (s/def :button-token/weight (s/and pos-int?
                                    #(< % 10)))
