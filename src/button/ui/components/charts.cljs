@@ -22,7 +22,10 @@
                                  tree (-> js/d3
                                           (.hierarchy data)
                                           (.sum (fn [d]
-                                                  (aget d "value"))))]
+                                                  (aget d "value")))
+                                          (.sort (fn [d1 d2]
+                                                   (- (aget d2 "value")
+                                                      (aget d1 "value")))))]
                              (treemap tree)
                              (-> js/d3
                                  (.select (str "#tilechart"))
