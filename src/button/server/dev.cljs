@@ -27,7 +27,10 @@
             [graphql-query.core :refer [graphql-query]]          
             [mount.core :as mount]
             [button.shared.graphql-schema :refer [graphql-schema]]
-            [button.server.graphql-resolvers :refer [resolvers-map]]))  
+            [button.server.graphql-resolvers :refer [resolvers-map]]
+            [cljs.spec.alpha :as s]
+            [cljs.spec.gen.alpha :as sg]
+            [clojure.test.check.generators])) 
 
 (nodejs/enable-util-print!)
 
@@ -92,3 +95,24 @@
       pprint/pprint))
 
 (set! *main-cli-fn* -main)
+
+(s/def :button-token/token-id string?)
+(s/def :button-token/number pos-int?)
+(s/def :button-token/owner-address (s/with-gen (s/and string?
+                                                      #(str/starts-with? % "0x"))
+                                     #(s/gen #{"0x5ed8cee6b63b1c6afce3ad7c92f4fd7e1b8fad9f"})))
+
+(s/def :button-token/weight (s/and pos-int?
+                                   #(< % 10)))
+
+(s/def :button-token/image-hash string?)
+
+(s/def ::button-token (s/keys :req [:button-token/token-id
+                                    :button-token/number
+                                    :button-token/owner-address
+                                    :button-token/weight
+                                    :button-token/image-hash]))
+
+
+(defn gen-dummy-data []
+  (swap! @button.server.db/button-db assoc :tokens (sg/generate (s/gen (s/coll-of ::button-token)))))
