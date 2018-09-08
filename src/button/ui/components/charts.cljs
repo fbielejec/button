@@ -2,7 +2,25 @@
   (:require [cljsjs.d3]
             [district.ui.graphql.subs :as gql]
             [re-frame.core :as re-frame]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [district.ui.component.form.input :as inputs]
+            [button.ui.events :as events]))
+
+(defn chart-tile [token-id]
+  [:div {:style {:background-color :red}}
+   [:input {:type :file
+            :id "file"
+            :on-change (fn [e]
+                         (let [files (-> e .-target .-files)
+                               f (aget files 0)]
+                           (let [url-reader (js/FileReader.)
+                                 ab-reader (js/FileReader.)]
+                             (set! (.-onload url-reader) (fn [e]
+                                                           (let [img-data (-> e .-target .-result)]
+                                                             ;; set img-data in src
+                                                             #_(.log js/console "Setting " img-data))))
+                             (.readAsDataURL url-reader f)
+                             (re-frame/dispatch [::events/upload-image f token-id]))))}]])
 
 (defn tile-chart-component [children]
   (r/create-class

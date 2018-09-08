@@ -67,3 +67,32 @@
                   :on-tx-success-n [[::tx-success]]
                   :on-tx-error [::tx-error]
                   :on-tx-error-n [[::tx-error]]}]})))
+
+(re-frame/reg-event-fx
+ ::upload-image
+ (fn [_ [_ file token-id]]
+   (.log js/console "Uploading " file)
+   {:ipfs/call {:func "add"
+                :args [file]
+                :on-success [::set-image-hash token-id]
+                :on-error ::error}}))
+
+(re-frame/reg-event-fx
+ ::set-image-hash
+ (fn [{:keys [db]} [_ token-id {:keys [Name Hash Size]}]]
+   (let [account #_(account-queries/active-account db) "0x4c3f13898913f15f12f902d6480178484063a6fb"]
+     (.log js/console "Calling " (contract-queries/instance db :button) (clj->js [:set-image-hash token-id Hash {:from account :gas 4500000}]))
+     {:dispatch [::web3-tx-events/send-tx
+                 {:instance (contract-queries/instance db :button)
+                  :fn :set-image-hash
+                  :args [token-id Hash]
+                  :tx-opts {:from account :gas 4500000}
+                  :on-tx-hash [::tx-hash]
+                  :on-tx-hash-n [[::tx-hash]]
+                  :on-tx-hash-error [::tx-hash-error]
+                  :on-tx-hash-error-n [[::tx-hash-error]]
+                  :on-tx-success [::tx-success]
+                  :on-tx-success-n [[::tx-success]]
+                  :on-tx-error [::tx-error]
+                  :on-tx-error-n [[::tx-error]]}]})))
+
