@@ -51,13 +51,15 @@
 
                              (treemap tree)
                              (-> js/d3
-                                 (.select (str "#tilechart"))
+                                 (.select "#tilechart")
                                  (.selectAll ".chart-node")
                                  (.data (-> tree .leaves))
                                  (.enter)
                                  (.append "div")
-                                 (.attr "class" "tilechart")
-                                 (.attr "class" "chart-node")
+                                 (.attr "class" (fn [d]
+                                                  (cond-> "chart-node"
+                                                    (= active-account (aget d "data" "owner"))
+                                                    (str " user-owned-node"))))
                                  (.style "background" "#ffffff")
                                  (.style "outline-width" "3px")
                                  (.style "outline-color" (fn [d]
@@ -79,12 +81,40 @@
                                                     (str (- (aget d "y1")
                                                             (aget d "y0")) "px")))
 
-                                 (.append "img")                                 
-                                 (.attr "src" "https://news.bitcoin.com/wp-content/uploads/2016/10/RAREPEPEcover.jpg")
+
+                                 (.append "label")
+                                 (.attr "for" "file-input")
+
+                                 (.append "img")
+                                 (.attr "src"  "https://news.bitcoin.com/wp-content/uploads/2016/10/RAREPEPEcover.jpg")
                                  (.style "width" "100%")
                                  (.style "height" "100%")
-                                 
-                                 )))}))
+
+
+                                 ;; (.append "input")
+                                 ;; (.attr "type" "file")
+                                 ;; (.attr "on-change" (fn [d]  (prn "click")))
+
+                                 )
+
+                             (-> js/d3
+                                 (.selectAll ".user-owned-node" )
+                                 (.append "input")
+                                 (.attr "id" "file-input")
+                                 (.attr "type" "file")
+                                 (.style "display" "none")
+                                 )
+
+
+                             ))}))
+
+;; <div class="image-upload">
+;;     <label for="file-input">
+;;         <img src="placeholder.jpg"/>
+;;     </label>
+
+;;     <input id="file-input" type="file"/>
+;; </div>
 
 (defn tile-chart []
   (let [active-account (re-frame/subscribe [::accounts-subs/active-account])
