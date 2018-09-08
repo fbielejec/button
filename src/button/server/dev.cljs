@@ -66,9 +66,9 @@
     pprint/pprint))
 
 (defn resync []
-  #_(mount/stop #'button.server.db/button-db
+  (mount/stop #'button.server.db/button-db
               #'button.server.syncer/syncer)
-  #_(-> (mount/start #'button.server.db/button-db
+  (-> (mount/start #'button.server.db/button-db
                    #'button.server.syncer/syncer)
       pprint/pprint))
 
@@ -86,7 +86,6 @@
                                       :path "/graphql"
                                       :graphiql true}
                             :web3 {:port 8549}
-                            :deployer {}
                             :smart-contracts {:contracts-var #'button.shared.smart-contracts/smart-contracts
                                               :print-gas-usage? true
                                               :auto-mining? true}}}})
@@ -116,3 +115,11 @@
 
 (defn gen-dummy-data []
   (swap! @button.server.db/button-db assoc :tokens (sg/generate (s/gen (s/coll-of ::button-token)))))
+
+#_(district.server.smart-contracts/contract :button)
+#_(district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)
+                                                 :press {:from (first (web3-eth/accounts @web3))
+                                                         :gas 4000000})
+
+#_(district.server.smart-contracts/contract-call :button :Transfer {} "latest" (fn [& args] (println "GOT AN EVENT()" args)))
+

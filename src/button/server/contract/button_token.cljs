@@ -4,5 +4,8 @@
     ;; [cljs-solidity-sha3.core :refer [solidity-sha3]]
     [district.server.smart-contracts :refer [contract-call]]))
 
-(defn token-minted-event [contract-key & args]
-  (apply contract-call contract-key :ContractMintedEvent args))
+(defn token-minted-event [& args]
+  (apply contract-call :button :Transfer args))
+
+(defn load-token [token-id]
+  (contract-call :button :load-token token-id))

@@ -9,8 +9,8 @@
    ;; [button.server.contract.button-token :as button-token]
    [mount.core :as mount :refer [defstate]]))
 
-(defn deploy-button-token! [default-opts]
-  (deploy-smart-contract! :buton-token (merge default-opts {:gas 2000000})))
+(defn deploy-button! [default-opts]
+  (deploy-smart-contract! :button (merge default-opts {:gas 2000000})))
 
 (defn deploy [{:keys [:write? :initial-registry-params :transfer-dank-token-to-accounts
                       :use-n-account-as-deposit-collector :use-n-account-as-cut-collector]
@@ -19,7 +19,7 @@
         deploy-opts (merge {:from (last accounts)}
                            deploy-opts)]
 
-    (deploy-button-token! deploy-opts)
+    (deploy-button! deploy-opts)
 
     (when write?
       (write-smart-contracts!))))

@@ -13,30 +13,54 @@
             [district.server.web3 :refer [web3]]
             [district.web3-utils :as web3-utils]
             [button.shared.macros :refer [try-catch]]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [mount.core :as mount :refer [defstate]]
+            [district.server.config :refer [config]]))
+
+(declare start)
+(declare stop)
+
+(defstate ^{:on-reload :noop} syncer
+  :start (start (merge (:syncer @config)
+                       (:syncer (mount/args))))
+  :stop (stop syncer))
 
 (defn- last-block-number []
   (web3-eth/block-number @web3))
  
 (defmulti process-event (fn [contract-type ev] [contract-type (:event-type ev)])) 
 
-(defmethod process-event [:contract/button-token :contract-minted-event]
+(defmethod process-event [:contract/button :transfer]
   [_ ev]
   (try-catch
-   (let [{:keys [:token-id :number :weight :last-press-block-number :owner-address :image-hash]} ev]
-
-     (button-db/add-token {:button-token/token-id token-id
-                           :button-token/number number
-                           :button-token/owner-address owner-address
-                           :button-token/weight weight
-                           :button-token/image-hash image-hash})
-     (button-db/set-last-press-block-number last-press-block-number)))) 
+   (let [{:keys [:token-id :to]} ev
+         token-id (bn/number token-id)
+         token (merge {:button-token/token-id token-id                           
+                       :button-token/owner-address to}
+                      (-> (zipmap [:button-token/number
+                                   :button-token/weight
+                                   :button-token/value
+                                   :button-token/image-hash]
+                                  (button-token/load-token token-id))
+                          (update :button-token/number bn/number)
+                          (update :button-token/weight bn/number)
+                          (update :button-token/value bn/number)))]
+     (log/info "Inserting  token !!" token)
+     (button-db/add-token token)
+     (button-db/set-last-press-block-number (:button-token/number token))))) 
 
 (defmethod process-event :default
   [k ev]
   (log/warn (str "No process-event defined for processing " k ev) ))
 
+;; :contract/button
+;; :transfer
+;; {:ev {:from 0x0000000000000000000000000000000000000000, :to 0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1, :token-id #object[BigNumber 7], :event-type :transfer, :timestamp nil}
+;;  :a {:args {:from 0x0000000000000000000000000000000000000000, :to 0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1, :token-id #object[BigNumber 7]}, :address 0x5d18ded3c0a476fcbc9e67fc1c613cfc5dd0d34b, :log-index 0, :transaction-index 0, :block-hash 0x01f5e3950e6ad8efd5aaff7141e826b50caf5ce0a0d95832acbadcd85e0b2789, :type mined, :block-number 202, :transaction-hash 0x59a24a228be3298993f03976dfe4b3afa279145650d419145cee55c4673b7cc3, :event Transfer}
+;;  } :button.server.syncer/dispatch-event
+
 (defn dispatch-event [contract-type err {:keys [args event] :as a}]
+  (println "Got event")
   (let [event-type (cond 
                      (:event-type args) (cs/->kebab-case-keyword (web3-utils/bytes32->str (:event-type args)))
                      event      (cs/->kebab-case-keyword event))
@@ -44,15 +68,15 @@
                ;; (assoc : (:address a))
                (assoc :event-type event-type)
                (update :timestamp bn/number))]
-    (log/info (str contract-type " " event-type) {:ev ev :a a} ::dispatch-event) 
+    (println (str contract-type " " event-type) {:ev ev :a a} ::dispatch-event) 
     (process-event contract-type ev)))
 
 (defn start [{:keys [:initial-param-query] :as opts}]
   (when-not (web3/connected? @web3)
     (throw (js/Error. "Can't connect to Ethereum node")))
   (let [last-block-number (last-block-number)
-        watchers [{:watcher (partial button-token/token-minted-event [:button-token]) 
-                   :on-event #(dispatch-event :contract/button-token %1 %2)}]] 
+        watchers [{:watcher (partial button-token/token-minted-event) 
+                   :on-event #(dispatch-event :contract/button %1 %2)}]]  
     (concat
 
      ;; Replay every past events (from block 0 to (dec last-block-number))
