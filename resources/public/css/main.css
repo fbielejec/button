@@ -1,10 +1,3 @@
-.button-center {
-  left: 50%;
-  top: 50%;
-  position: absolute;
-  margin-left: -100px;
-  margin-top: -100px;
-}
 .button-center .select-button {
   width: 200px;
   height: 180px;
@@ -34,10 +27,22 @@
   background: transparent;
   text-shadow: 1px 1px 1px #202020;
   font-family: "Lato", sans-serif;
-  font-size: 18pt;
+  font-size: 88pt;
   border: 1px solid lightblue;
   color: lightblue;
 }
 body {
   background: #333;
+  font-family: "Lato", sans-serif;
+  font-size: 18pt;
+}
+.outermost-layout {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+.main-layout {
+  display: flex;
+  justify-content: space-around;
+  width: 25%;
 }

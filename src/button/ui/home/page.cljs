@@ -8,6 +8,7 @@
 
 (defmethod page :route/home []
   (fn []
-    [:div
-     [button/component]
-     [counter/component]]))
+    [:div.outmost-layout
+     [:div.main-layout
+      [button/component]
+      [counter/component]]]))

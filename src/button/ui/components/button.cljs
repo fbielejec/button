@@ -3,4 +3,5 @@
 
 (defn component []
   [:div.button-center
-   [:div.select-button]])
+   [:div.select-button
+    "DO NOT PRESS"]])
