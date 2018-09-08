@@ -7,7 +7,7 @@
   type Query {
 
     allTokens(): [ButtonToken]
-  
+
   }
 
   type ButtonToken {
@@ -15,7 +15,7 @@
     buttonToken_number: Int
     buttonToken_ownerAddress: ID
     buttonToken_weight: Float
-    buttonToken_imageHash: String
+    buttonToken_imageHash: ID
   }
-  
+
   ")
