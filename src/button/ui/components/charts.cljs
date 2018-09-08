@@ -35,16 +35,16 @@
                                   (map #(aget % "y0")  (-> tree .leaves))
                                   (map #(aget % "y1")  (-> tree .leaves)))
 
+                             (treemap tree)
+
                              (-> js/d3
                                  (.select (str "#tilechart"))
-                                 ;; (.append "svg")
-                                 (.attr "class" "tilechart")
-                                 (.attr "width" width)
-                                 (.attr "height" height)
                                  (.selectAll ".node")
                                  (.data (-> tree .leaves))
                                  (.enter)
                                  (.append "div")
+
+                                 (.attr "class" "tilechart")
                                  (.attr "class" "node")
                                  (.style "background" "#ffffff")
 
@@ -61,9 +61,4 @@
 
                                  (.style "height" (fn [d]
                                                     (str (- (aget d "y1")
-                                                            (aget d "y0")) "px")))
-
-
-                                 )
-
-                             ))}))
+                                                            (aget d "y0")) "px"))))))}))
