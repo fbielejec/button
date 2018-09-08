@@ -7,7 +7,7 @@
             [district.ui.component.form.input :as inputs]
             [button.ui.events :as events]))
 
-(defn chart-tile [token-id]
+#_(defn chart-tile [token-id]
   [:div {:style {:background-color :red}}
    [:input {:type :file
             :id "file"
@@ -22,6 +22,19 @@
                                                              #_(.log js/console "Setting " img-data))))
                              (.readAsDataURL url-reader f)
                              (re-frame/dispatch [::events/upload-image f token-id]))))}]])
+
+(defn on-change [token-id]
+  (fn [e]
+    (let [files (-> e .-target .-files)
+          f (aget files 0)]
+      (let [url-reader (js/FileReader.)
+            ab-reader (js/FileReader.)]
+        (set! (.-onload url-reader) (fn [e]
+                                      (let [img-data (-> e .-target .-result)]
+                                        ;; set img-data in src
+                                        #_(.log js/console "Setting " img-data))))
+        (.readAsDataURL url-reader f)
+        (re-frame/dispatch [::events/upload-image f token-id])))))
 
 (defn tile-chart-component [{:keys [:children :active-account]}]
   (r/create-class
@@ -102,7 +115,17 @@
                                  (.append "input")
                                  (.attr "id" "file-input")
                                  (.attr "type" "file")
-                                 (.style "display" "none")
+
+                                 (.attr "on-change" (fn [d]
+
+                                                      ;; (prn "TOKEN ID" (aget d "data" "token-id"))
+
+                                                      (on-change (aget d "data" "token-id"))
+
+                                                      
+                                                      ))
+                                 
+
                                  )
 
 
@@ -118,15 +141,17 @@
 
 (defn tile-chart []
   (let [active-account (re-frame/subscribe [::accounts-subs/active-account])
-        response (re-frame/subscribe [::gql/query {:queries [[:all-tokens [:button-token/owner-address
+        response (re-frame/subscribe [::gql/query {:queries [[:all-tokens [:button-token/token-id
+                                                                           :button-token/owner-address
                                                                            :button-token/weight
                                                                            :button-token/image-hash]]]}])]
     (when-not (:graphql/loading? @response)
       (let [children (reduce
-                      (fn [children {:keys [:button-token/owner-address :button-token/weight :button-token/image-hash] }]
+                      (fn [children {:keys [:button-token/token-id :button-token/owner-address :button-token/weight :button-token/image-hash] }]
                         (conj children {:id image-hash
                                         :value weight
-                                        :owner owner-address}))
+                                        :owner owner-address
+                                        :token-id token-id}))
                       []
                       (-> @response :all-tokens))]
         [tile-chart-component {:children children
