@@ -24,7 +24,6 @@
 (re-frame/reg-event-fx
  ::fetch-current-block-number
  (fn [{:keys [db]} [_ _]]
-   (js/console.log "Web3 is:" (web3-queries/web3 db))
    {:web3/call {:web3 (web3-queries/web3 db)
                 :fns [{:fn cljs-web3.eth/block-number
                        :args []
