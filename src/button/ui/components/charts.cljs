@@ -7,18 +7,19 @@
             [district.ui.component.form.input :as inputs]
             [button.ui.events :as events]))
 
-(defn on-change [token-id]
-  (fn [e]
-    (let [files (-> e .-target .-files)
-          f (aget files 0)]
-      (let [url-reader (js/FileReader.)
-            ab-reader (js/FileReader.)]
-        (set! (.-onload url-reader) (fn [e]
-                                      (let [img-data (-> e .-target .-result)]
-                                        ;; set img-data in src
-                                        #_(.log js/console "Setting " img-data))))
-        (.readAsDataURL url-reader f)
-        (re-frame/dispatch [::events/upload-image f token-id])))))
+(defn on-change [token-id e]
+  (prn "@on-change FIRED")
+  
+  (let [files (-> e .-target .-files)
+        f (aget files 0)]
+    (let [url-reader (js/FileReader.)
+          ab-reader (js/FileReader.)]
+      (set! (.-onload url-reader) (fn [e]
+                                    (let [img-data (-> e .-target .-result)]
+                                      ;; set img-data in src
+                                      (.log js/console "Setting " img-data))))
+      (.readAsDataURL url-reader f)
+      (re-frame/dispatch [::events/upload-image f token-id]))))
 
 (defn tile-chart-component [{:keys [:children :active-account]}]
   (r/create-class
@@ -96,11 +97,11 @@
                                                (aget d "data" "id")))
                                  (.attr "type" "file")
 
-                                 (.attr "on-change" (fn [d]
+                                 (.attr "onchange" (fn [d]
 
                                                       ;; (prn "TOKEN ID" (aget d "data" "id"))
 
-                                                      (on-change (aget d "data" "id"))
+                                                      (partial on-change (aget d "data" "id"))
 
 
                                                       ))
