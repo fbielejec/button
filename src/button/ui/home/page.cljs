@@ -3,6 +3,7 @@
    [district.ui.component.page :refer [page]]
    [button.ui.components.button :as button]
    [button.ui.components.block-counter :as counter]
+   [button.ui.components.charts :as charts]
    [re-frame.core :refer [subscribe dispatch]]
    [reagent.core :as r]))
 
@@ -12,3 +13,4 @@
      [:div.main-layout
       [button/component]
       [counter/component]]]))
+
