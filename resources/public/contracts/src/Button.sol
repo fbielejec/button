@@ -13,11 +13,10 @@ contract Button is ERC721Full("Button", "BUTT") {
     bytes imageHash;
   }
 
-  event Press(uint256);
-
   // Array for mapping from tokenId to token data
   Token[] private _tokenData;
 
+  event Press(uint256);
   event ImageHashSet(uint256 tokenId);
 
   function press() public payable {
