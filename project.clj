@@ -59,8 +59,8 @@
                        ;; https://github.com/ethereumjs/ethereumjs-wallet/issues/64
                        [ethereumjs-wallet "0.6.0"]]}
 
-  :solc {:src-path "resources/contracts/src"
-         :build-path "resources/contracts/build"
+  :solc {:src-path "resources/public/contracts/src"
+         :build-path "resources/public/contracts/build"
          :solc-err-only true
          :wc true
          :contracts :all}
