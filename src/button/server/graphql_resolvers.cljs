@@ -13,7 +13,7 @@
             [district.server.web3 :as web3]
             ;; [honeysql.core :as sql]
             ;; [honeysql.helpers :as sqlh]
-            [print.foo :refer [look] :include-macros true]
+          
             [taoensso.timbre :as log]
             [button.server.db :as button-db]))
 
