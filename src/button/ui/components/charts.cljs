@@ -1,16 +1,22 @@
 (ns button.ui.components.charts
   (:require [cljsjs.d3]
+            [district.ui.web3-accounts.subs :as accounts-subs]
             [district.ui.graphql.subs :as gql]
             [re-frame.core :as re-frame]
             [reagent.core :as r]))
 
-(defn tile-chart-component [children]
+;; d3.scaleSequential(d3.interpolateRainbow).domain(d3.extent(data.map(d=>d.x)))
+
+(defn tile-chart-component [{:keys [:children :active-account]}]
   (r/create-class
-   {:reagent-render (fn [children]
+   {:reagent-render (fn [{:keys [:children :active-account]}]
                       [:div {:id "tilechart"}])
     :component-did-mount (fn []
                            (let [width 500
                                  height 500
+                                 color-scale (-> js/d3
+                                                 (.scaleSequential (-> js/d3 .-interpolateRainbow))
+                                                 (.domain (-> js/d3 (.extent (clj->js (map :value children))))))
                                  data (clj->js {:name "rect"
                                                 :children children})
                                  treemap (-> js/d3
@@ -26,6 +32,9 @@
                                           (.sort (fn [d1 d2]
                                                    (- (aget d2 "value")
                                                       (aget d1 "value")))))]
+
+                             (prn (map :value children))
+                             
                              (treemap tree)
                              (-> js/d3
                                  (.select (str "#tilechart"))
@@ -36,6 +45,14 @@
                                  (.attr "class" "tilechart")
                                  (.attr "class" "node")
                                  (.style "background" "#ffffff")
+                                 (.style "background-color" (fn [d]
+                                                              
+                                                              (prn (aget d "data" "value"))
+
+                                                              (if (= active-account (aget d "data" "owner"))
+                                                                "#66CC66"
+                                                                (color-scale
+                                                                 (aget d "data" "value")))))
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
                                  (.style "top" (fn [d]
@@ -48,7 +65,8 @@
                                                             (aget d "y0")) "px"))))))}))
 
 (defn tile-chart []
-  (let [response (re-frame/subscribe [::gql/query {:queries [[:all-tokens [:button-token/owner-address
+  (let [active-account (re-frame/subscribe [::accounts-subs/active-account])
+        response (re-frame/subscribe [::gql/query {:queries [[:all-tokens [:button-token/owner-address
                                                                            :button-token/weight
                                                                            :button-token/image-hash]]]}])]
     (when-not (:graphql/loading? @response)
@@ -59,4 +77,5 @@
                                         :owner owner-address}))
                       []
                       (-> @response :all-tokens))]
-        [tile-chart-component children]))))
+        [tile-chart-component {:children children
+                               :active-account @active-account}]))))
