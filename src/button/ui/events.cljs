@@ -14,11 +14,13 @@
 (re-frame/reg-event-db
  ::current-block-number
  (fn [db [_ number]]
+   (println "The current block number is:" number)
    (assoc-in db [:button-app :current-block-number] number)))
 
 (re-frame/reg-event-db
  ::last-pressed-block-number
  (fn [db [_ number]]
+   (println "The last pressed block number is:" number)
    (assoc-in db [:button-app :last-pressed-block-number] number)))
 
 (re-frame/reg-event-db
@@ -48,6 +50,7 @@
 (re-frame/reg-event-fx
  ::forward-to-timer
  (fn []
+   (println "Forarding to timer")
    {:forward-events
     {:register :my-forwarder
      :events #{::web3-events/web3-created}
