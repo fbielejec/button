@@ -19,14 +19,24 @@
   :code
   "(button.server.syncer/process-event :contract/button-token\n                                    {:event-type :contract-minted-event\n                                     :token-id \"${token-id}\" \n                                     :number ${number} \n                                     :weight ${weight} \n                                     :last-press-block-number ${last-press-block-number} \n                                     :owner-address \"${owner-address}\" \n                                     :image-hash \"${image-hash}\" })",
   :x 937.0},
- "080e5ec4-f043-4b7c-b3b2-cc32d313cc41"
- {:y 0.0,
+ "2bb2a4fd-f647-4086-8bbb-82c56a43404c"
+ {:y 383.0,
   :key "T",
-  :w 445.0,
+  :w 1335.0,
   :title "Tokens",
-  :h 257.0,
-  :node-id "080e5ec4-f043-4b7c-b3b2-cc32d313cc41",
+  :h 381.0,
+  :node-id "2bb2a4fd-f647-4086-8bbb-82c56a43404c",
   :result-type :as-table,
   :code
-  "(district.server.graphql/run-query {:queries [[:all-tokens [:button-token/token-id\n                                                               :button-token/number\n                                                               :button-token/owner-address\n                                                               :button-token/weight\n                                                               :button-token/image-hash]]]})",
-  :x 0.0}}
+  "(-> (district.server.graphql/run-query {:queries [[:all-tokens [:button-token/token-id\n                                                                                :button-token/number\n                                                                                :button-token/owner-address\n                                                                                :button-token/weight\n                                                                                :button-token/image-hash\n                                                                                ]]]})\n                       :data :all-tokens)",
+  :x 69.0},
+ "9ef00b73-7b3f-43a0-9b37-293071fa0c67"
+ {:y 321.0,
+  :key "G",
+  :w 220.0,
+  :title "Gen tokens",
+  :h 55.0,
+  :node-id "9ef00b73-7b3f-43a0-9b37-293071fa0c67",
+  :result-type nil,
+  :code "(button.server.dev/gen-dummy-data)",
+  :x 66.0}}
