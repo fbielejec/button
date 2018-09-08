@@ -25,7 +25,8 @@
    [button.shared.smart-contracts :refer [smart-contracts]]
    [mount.core :as mount]
    [re-frisk.core :refer [enable-re-frisk!]]
-   [re-frame.core :as re-frame]))
+   [re-frame.core :as re-frame]
+   [button.ui.ipfs]))
 
 (def debug? ^boolean js/goog.DEBUG)
 

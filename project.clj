@@ -33,7 +33,9 @@
                  [district0x/district-server-config "1.0.1"]
                  [district0x/district-server-db "1.0.3"]
                  [district0x/district-server-graphql "1.0.15"]
-                 [org.clojure/test.check "0.10.0-alpha3"]]
+                 [org.clojure/test.check "0.10.0-alpha3"]
+                 [district0x/re-frame-ipfs-fx "0.0.2"]
+                 [district0x/district-ui-component-form "0.1.11-SNAPSHOT"]]
 
   :exclusions [[express-graphql]
                [org.clojure/clojure]
