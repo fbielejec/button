@@ -7,7 +7,7 @@
 (defn tile-chart-component [children]
   (r/create-class
    {:reagent-render (fn [children]
-                      [:div {:id "tilechart"}])
+                      [:div.title-chart {:id "tilechart"}])
     :component-did-mount (fn []
                            (let [width 500
                                  height 500
@@ -29,12 +29,12 @@
                              (treemap tree)
                              (-> js/d3
                                  (.select (str "#tilechart"))
-                                 (.selectAll ".node")
+                                 (.selectAll ".chart-node")
                                  (.data (-> tree .leaves))
                                  (.enter)
                                  (.append "div")
                                  (.attr "class" "tilechart")
-                                 (.attr "class" "node")
+                                 (.attr "class" "chart-node")
                                  (.style "background" "#ffffff")
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))

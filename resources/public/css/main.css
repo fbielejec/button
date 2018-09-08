@@ -31,6 +31,15 @@
   border: 1px solid lightblue;
   color: lightblue;
 }
+.chart-node {
+  display: flex;
+  box-sizing: border-box;
+  position: absolute;
+  overflow: hidden;
+}
+.title-chart {
+  width: 80%;
+}
 body {
   background: #333;
   font-family: "Lato", sans-serif;
@@ -44,10 +53,5 @@ body {
 .main-layout {
   display: flex;
   justify-content: space-around;
-  width: 50%;
-}
-.node {
-  box-sizing: border-box;
-  position: absolute;
-  overflow: hidden;
+  width: 25%;
 }
