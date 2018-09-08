@@ -17,10 +17,12 @@
    [district.ui.web3-tx]
    [district.ui.web3]
    [district.ui.window-size]
+   [district.ui.web3-tx.events]
    [button.ui.home.page]
    [button.shared.graphql-schema :refer [graphql-schema]]
    [button.ui.events :as button-events]
    [button.shared.routes :refer [routes]]
+   [button.shared.smart-contracts :refer [smart-contracts]]
    [mount.core :as mount]
    [re-frisk.core :refer [enable-re-frisk!]]
    [re-frame.core :as re-frame]))
@@ -37,7 +39,7 @@
   (dev-setup)
   (-> (mount/with-args
         (merge {:web3 {:url "http://localhost:8549"}
-                #_#_:smart-contracts {:contracts (apply dissoc smart-contracts skipped-contracts)}
+                :smart-contracts {:contracts smart-contracts}
                 #_#_:web3-balances {:contracts (select-keys smart-contracts [:DANK])}
                 #_#_:web3-account-balances {:for-contracts [:ETH]}
                 #_#_:web3-tx-log {:open-on-tx-hash? true
