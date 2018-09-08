@@ -2,4 +2,20 @@
 
 (def graphql-schema "
   scalar Date
-  scalar Keyword")
+  scalar Keyword
+
+  type Query {
+
+    allTokens(): [ButtonToken]
+  
+  }
+
+  type ButtonToken {
+    buttonToken_tokenId: ID
+    buttonToken_number: Int
+    buttonToken_ownerAddress: ID
+    buttonToken_weight: Float
+    buttonToken_imageHash: String
+  }
+  
+  ")
