@@ -5,8 +5,6 @@
             [re-frame.core :as re-frame]
             [reagent.core :as r]))
 
-;; d3.scaleSequential(d3.interpolateRainbow).domain(d3.extent(data.map(d=>d.x)))
-
 (defn tile-chart-component [{:keys [:children :active-account]}]
   (r/create-class
    {:reagent-render (fn [{:keys [:children :active-account]}]
@@ -33,8 +31,6 @@
                                                    (- (aget d2 "value")
                                                       (aget d1 "value")))))]
 
-                             (prn (map :value children))
-
                              (treemap tree)
                              (-> js/d3
                                  (.select (str "#tilechart"))
@@ -45,14 +41,15 @@
                                  (.attr "class" "tilechart")
                                  (.attr "class" "chart-node")
                                  (.style "background" "#ffffff")
-                                 (.style "background-color" (fn [d]
+                                 (.style "outline-width" "3px")
+                                 (.style "outline-color" (fn [d]
 
-                                                              (prn (aget d "data" "value"))
+                                                           (prn (aget d "data" "value"))
 
-                                                              (if (= active-account (aget d "data" "owner"))
-                                                                "#66CC66"
-                                                                (color-scale
-                                                                 (aget d "data" "value")))))
+                                                           (if (= active-account (aget d "data" "owner"))
+                                                             "#66CC66"
+                                                             (color-scale
+                                                              (aget d "data" "value")))))
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
                                  (.style "top" (fn [d]
@@ -62,7 +59,14 @@
                                                            (aget d "x0")) "px")))
                                  (.style "height" (fn [d]
                                                     (str (- (aget d "y1")
-                                                            (aget d "y0")) "px"))))))}))
+                                                            (aget d "y0")) "px")))
+
+                                 (.append "img")                                 
+                                 (.attr "src" "https://news.bitcoin.com/wp-content/uploads/2016/10/RAREPEPEcover.jpg")
+                                 (.style "width" "100%")
+                                 (.style "height" "100%")
+                                 
+                                 )))}))
 
 (defn tile-chart []
   (let [active-account (re-frame/subscribe [::accounts-subs/active-account])
