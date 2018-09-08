@@ -1,3 +1,3 @@
-(ns memefactory.server.macros
-  (:require-macros [memefactory.server.macros])) 
+(ns button.shared.macros
+  (:require-macros [button.shared.macros])) 
 

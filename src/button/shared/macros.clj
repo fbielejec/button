@@ -1,4 +1,4 @@
-(ns memefactory.server.macros
+(ns button.shared.macros
   (:require [taoensso.timbre :as log]
             [cljs.core :as cljs]))
 

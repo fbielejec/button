@@ -12,7 +12,7 @@
              [replay-past-events]]
             [district.server.web3 :refer [web3]]
             [district.web3-utils :as web3-utils]
-            [memefactory.server.macros :refer [try-catch]]
+            [button.shared.macros :refer [try-catch]]
             [taoensso.timbre :as log]))
 
 (defn- last-block-number []
