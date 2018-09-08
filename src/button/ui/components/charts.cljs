@@ -10,7 +10,7 @@
 (defn tile-chart-component [{:keys [:children :active-account]}]
   (r/create-class
    {:reagent-render (fn [{:keys [:children :active-account]}]
-                      [:div {:id "tilechart"}])
+                      [:div.title-chart {:id "tilechart"}])
     :component-did-mount (fn []
                            (let [width 500
                                  height 500
@@ -34,19 +34,19 @@
                                                       (aget d1 "value")))))]
 
                              (prn (map :value children))
-                             
+
                              (treemap tree)
                              (-> js/d3
                                  (.select (str "#tilechart"))
-                                 (.selectAll ".node")
+                                 (.selectAll ".chart-node")
                                  (.data (-> tree .leaves))
                                  (.enter)
                                  (.append "div")
                                  (.attr "class" "tilechart")
-                                 (.attr "class" "node")
+                                 (.attr "class" "chart-node")
                                  (.style "background" "#ffffff")
                                  (.style "background-color" (fn [d]
-                                                              
+
                                                               (prn (aget d "data" "value"))
 
                                                               (if (= active-account (aget d "data" "owner"))
