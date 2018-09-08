@@ -9,6 +9,7 @@
                  [district0x/district-ui-reagent-render "1.0.1"]
                  [org.clojure/clojurescript "1.9.946"]
                  [re-frame "0.10.5"]
+                 [cljsjs/react-flexbox-grid "1.0.0-0"]
                  [district0x/district-web3-utils "1.0.2"]
                  [district0x/district-server-middleware-logging "1.0.0"]
                  [district0x/district-server-smart-contracts "1.0.8"]
