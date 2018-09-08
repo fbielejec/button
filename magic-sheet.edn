@@ -1,15 +1,5 @@
-{"c4a4e425-77a8-4a9b-adb6-3b6f5786995d"
- {:y 88.0,
-  :key "L",
-  :w 221.0,
-  :title "Last press",
-  :h 102.0,
-  :node-id "c4a4e425-77a8-4a9b-adb6-3b6f5786995d",
-  :result-type :as-value,
-  :code "(:last-press-block-number @@button.server.db/button-db)",
-  :x 420.0},
- "4b6ec65c-f099-4a97-a143-6a0ff5736b8c"
- {:y 126.0,
+{"4b6ec65c-f099-4a97-a143-6a0ff5736b8c"
+ {:y 127.0,
   :key "M",
   :w 368.0,
   :title "Mint Event",
@@ -18,7 +8,7 @@
   :result-type nil,
   :code
   "(button.server.syncer/process-event :contract/button-token\n                                    {:event-type :contract-minted-event\n                                     :token-id \"${token-id}\" \n                                     :number ${number} \n                                     :weight ${weight} \n                                     :last-press-block-number ${last-press-block-number} \n                                     :owner-address \"${owner-address}\" \n                                     :image-hash \"${image-hash}\" })",
-  :x 937.0},
+  :x 1033.0},
  "2bb2a4fd-f647-4086-8bbb-82c56a43404c"
  {:y 383.0,
   :key "T",
@@ -39,4 +29,46 @@
   :node-id "9ef00b73-7b3f-43a0-9b37-293071fa0c67",
   :result-type nil,
   :code "(button.server.dev/gen-dummy-data)",
-  :x 66.0}}
+  :x 66.0},
+ "36091475-8e9a-425c-a453-9f53ea87b9ba"
+ {:y 114.0,
+  :key "L",
+  :w 229.0,
+  :title "Last Press",
+  :h 102.0,
+  :node-id "36091475-8e9a-425c-a453-9f53ea87b9ba",
+  :result-type :as-value,
+  :code
+  "(-> (district.server.graphql/run-query {:queries [[:last-press-block-number]]})\n                       :data :last-press-block-number)",
+  :x 81.0},
+ "02a2215f-bd74-43a3-ada7-7ce3b06891bb"
+ {:y 207.0,
+  :key "B",
+  :w 215.0,
+  :title "BUTTON",
+  :h 55.0,
+  :node-id "02a2215f-bd74-43a3-ada7-7ce3b06891bb",
+  :result-type nil,
+  :code
+  "(district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)\n                                                 :press {:from (first (cljs-web3.eth/accounts @district.server.web3/web3))\n                                                         :gas 4000000})",
+  :x 577.0},
+ "eb9c2ade-26dd-4e5e-9bf9-870c78746b41"
+ {:y 11.0,
+  :key "R",
+  :w 221.0,
+  :title "Redeploy",
+  :h 61.0,
+  :node-id "eb9c2ade-26dd-4e5e-9bf9-870c78746b41",
+  :result-type nil,
+  :code "(button.server.dev/redeploy)",
+  :x 566.0},
+ "d44914f2-bb57-462b-b9a5-d20199cd2111"
+ {:y 223.0,
+  :key "M",
+  :w 182.0,
+  :title "Mine",
+  :h 59.0,
+  :node-id "d44914f2-bb57-462b-b9a5-d20199cd2111",
+  :result-type nil,
+  :code "(cljs-web3.evm/mine! @district.server.web3/web3)",
+  :x 80.0}}
