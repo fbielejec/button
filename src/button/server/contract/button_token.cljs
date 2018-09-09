@@ -5,7 +5,10 @@
     [district.server.smart-contracts :refer [contract-call]]))
 
 (defn token-minted-event [& args]
-  (apply contract-call :button :Transfer args))
+  (apply contract-call :button :Press args))
+
+(defn token-hash-updated-event [& args]
+  (apply contract-call :button :ImageHashSet args))
 
 (defn load-token [token-id]
   (contract-call :button :load-token token-id))

@@ -7,9 +7,7 @@
             [district.ui.component.form.input :as inputs]
             [button.ui.events :as events]))
 
-(defn on-change [token-id e]
-  (prn "@on-change FIRED")
-  
+(defn on-change [e token-id]
   (let [files (-> e .-target .-files)
         f (aget files 0)]
     (let [url-reader (js/FileReader.)
@@ -98,13 +96,7 @@
                                  (.attr "type" "file")
 
                                  (.attr "onchange" (fn [d]
-
-                                                      ;; (prn "TOKEN ID" (aget d "data" "id"))
-
-                                                      (partial on-change (aget d "data" "id"))
-
-
-                                                      ))
+                                                     (str "button.ui.components.charts.on_change(event," (aget d "data" "id") ")")))
 
 
                                  )

@@ -95,7 +95,7 @@
 
 (set! *main-cli-fn* -main)
 
-(s/def :button-token/token-id string?)
+(s/def :button-token/token-id pos-int?)
 (s/def :button-token/number pos-int?)
 (s/def :button-token/owner-address (s/with-gen (s/and string?
                                                       #(str/starts-with? % "0x"))
@@ -121,7 +121,11 @@
 
 #_(district.server.smart-contracts/contract :button)
 #_(district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)
-                                                 :press {:from (first (web3-eth/accounts @web3))
+                                                 :press {:from (first (cljs-web3.eth/accounts @district.server.web3/web3))
                                                          :gas 4000000})
+
+#_(district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)
+                                                 :set-image-hash 0 "QmQtvPTzQr66uivmquqqKuqZWqqoaDBkiM98sZB8fYLEXM" {:from (first (cljs-web3.eth/accounts @district.server.web3/web3))
+                                                                  :gas 4000000})
 
 #_(district.server.smart-contracts/contract-call :button :Transfer {} "latest" (fn [& args] (println "GOT AN EVENT()" args)))

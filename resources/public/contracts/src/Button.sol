@@ -10,14 +10,14 @@ contract Button is ERC721Full("Button", "BUTT") {
     uint256 blockNumber;
     uint256 weight;
     uint256 value;
-    bytes imageHash;
+    bytes imageHash; 
   }
 
   // Array for mapping from tokenId to token data
   Token[] private _tokenData;
 
-  event Press(uint256);
-  event ImageHashSet(uint256 tokenId);
+  event Press(uint256 tokenId);
+  event ImageHashSet(uint256 tokenId, bytes imageHash);
 
   function press() public payable {
     uint256 lastTokenBlockNumber = blockNumber;
@@ -51,16 +51,17 @@ contract Button is ERC721Full("Button", "BUTT") {
   function setImageHash(uint256 _tokenId, bytes _imageHash) public {
     require(msg.sender == ownerOf(_tokenId), "You are not the owner of this token");
     _tokenData[_tokenId].imageHash = _imageHash;
-    emit ImageHashSet(_tokenId);
+    emit ImageHashSet(_tokenId, _imageHash);
   }
 
   function loadToken(uint256 _tokenId) public view
-    returns(uint256, uint256, uint256, bytes) {
+    returns(uint256, uint256, uint256, bytes, address) {
     Token memory token = _tokenData[_tokenId];
     return (token.blockNumber,
             token.weight,
             token.value,
-            token.imageHash);
+            token.imageHash,
+            ownerOf(_tokenId));
   }
 
   function transferFrom(address _from, address _to, uint256 _tokenId) public {

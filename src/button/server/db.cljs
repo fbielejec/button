@@ -22,6 +22,18 @@
 (defn set-last-press-block-number [number]
   (swap! @button-db assoc :last-press-block-number number))
 
+(defn update-image-hash [t-id hash]
+(swap! @button-db (fn [db]
+                      (update db :tokens
+                              (fn [tokens] 
+                                (mapv (fn [{:keys [:button-token/token-id] :as t}]
+                                        (if (= t-id token-id)
+                                          (assoc t :button-token/image-hash hash)
+                                          t))
+                                      tokens))))))
+
+
+
 (defn get-last-press-block-number []
   (:last-press-block-number @@button-db))
 

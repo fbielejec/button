@@ -30,37 +30,38 @@
  
 (defmulti process-event (fn [contract-type ev] [contract-type (:event-type ev)])) 
 
-(defmethod process-event [:contract/button :transfer]
+(defmethod process-event [:contract/button :press]
   [_ ev]
   (try-catch
-   (let [{:keys [:token-id :to]} ev
+   (let [{:keys [:token-id]} ev
          token-id (bn/number token-id)
-         token (merge {:button-token/token-id token-id                           
-                       :button-token/owner-address to}
+         token (merge {:button-token/token-id token-id}
                       (-> (zipmap [:button-token/number
                                    :button-token/weight
                                    :button-token/value
-                                   :button-token/image-hash]
+                                   :button-token/image-hash
+                                   :button-token/owner-address]
                                   (button-token/load-token token-id))
                           (update :button-token/number bn/number)
                           (update :button-token/weight bn/number)
                           (update :button-token/value bn/number)))]
+     (log/info "WE HAVE " (button-token/load-token token-id))
      (log/info "Inserting  token !!" token)
      (button-db/add-token token)
-     (button-db/set-last-press-block-number (:button-token/number token))))) 
+     (button-db/set-last-press-block-number (:button-token/number token)))))
+
+(defmethod process-event [:contract/button :image-hash-set]
+  [_ ev]
+  (try-catch 
+   (log/info (str "Updating " ev (bn/number (:token-id ev)) (web3/to-ascii (:image-hash ev))))  
+   (button-db/update-image-hash (bn/number (:token-id ev)) (web3/to-ascii (:image-hash ev))))) 
 
 (defmethod process-event :default
   [k ev]
   (log/warn (str "No process-event defined for processing " k ev) ))
 
-;; :contract/button
-;; :transfer
-;; {:ev {:from 0x0000000000000000000000000000000000000000, :to 0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1, :token-id #object[BigNumber 7], :event-type :transfer, :timestamp nil}
-;;  :a {:args {:from 0x0000000000000000000000000000000000000000, :to 0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1, :token-id #object[BigNumber 7]}, :address 0x5d18ded3c0a476fcbc9e67fc1c613cfc5dd0d34b, :log-index 0, :transaction-index 0, :block-hash 0x01f5e3950e6ad8efd5aaff7141e826b50caf5ce0a0d95832acbadcd85e0b2789, :type mined, :block-number 202, :transaction-hash 0x59a24a228be3298993f03976dfe4b3afa279145650d419145cee55c4673b7cc3, :event Transfer}
-;;  } :button.server.syncer/dispatch-event
-
 (defn dispatch-event [contract-type err {:keys [args event] :as a}]
-  (println "Got event")
+  (println "Got event" a)
   (let [event-type (cond 
                      (:event-type args) (cs/->kebab-case-keyword (web3-utils/bytes32->str (:event-type args)))
                      event      (cs/->kebab-case-keyword event))
@@ -76,6 +77,8 @@
     (throw (js/Error. "Can't connect to Ethereum node")))
   (let [last-block-number (last-block-number)
         watchers [{:watcher (partial button-token/token-minted-event) 
+                   :on-event #(dispatch-event :contract/button %1 %2)}
+                  {:watcher (partial button-token/token-hash-updated-event) 
                    :on-event #(dispatch-event :contract/button %1 %2)}]]  
     (concat
 
