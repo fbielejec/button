@@ -10,7 +10,7 @@ contract Button is ERC721Full("Button", "BUTT") {
     uint256 blockNumber;
     uint256 weight;
     uint256 value;
-    bytes imageHash; 
+    bytes imageHash;
   }
 
   // Array for mapping from tokenId to token data
