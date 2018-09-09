@@ -24,8 +24,9 @@
    {:reagent-render (fn [{:keys [:children :active-account]}]
                       [:div.title-chart {:id "tilechart"}])
     :component-did-mount (fn []
-                           (let [width 500
-                                 height 500
+                           (let [width 1550
+                                 height 750
+                                 top 200
                                  color-scale (-> js/d3
                                                  (.scaleSequential (-> js/d3 .-interpolateRainbow))
                                                  (.domain (-> js/d3 (.extent (clj->js (map :value children))))))
@@ -66,10 +67,11 @@
                                                                 "#66CC66"
                                                                 (color-scale
                                                                  (aget d "data" "value")))))
+                                 
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
                                  (.style "top" (fn [d]
-                                                 (str (aget d "y0") "px")))
+                                                 (str (+ top (aget d "y0")) "px")))
                                  (.style "width" (fn [d]
                                                    (str (- (aget d "x1")
                                                            (aget d "x0")) "px")))
@@ -84,9 +86,12 @@
 
                                  (.append "img")
                                  (.attr "src"  (fn [d]
-                                                 (str "https://gateway.ipfs.io/ipfs/" (aget d "data" "image-hash"))))
-                                 (.style "width" "100%")
-                                 (.style "height" "100%"))
+                                                 (let [hash (aget d "data" "image-hash")]
+                                                  (if-not (= hash "0x")
+                                                    (str "https://gateway.ipfs.io/ipfs/" hash)
+                                                    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")))))
+
+                             
 
                              (-> js/d3
                                  (.selectAll ".user-owned-node" )
@@ -127,5 +132,6 @@
                                         :image-hash image-hash}))
                       []
                       (-> @response :all-tokens))]
-        [tile-chart-component {:children children
-                               :active-account @active-account}]))))
+        (when (pos? (count children))
+         [tile-chart-component {:children children
+                                :active-account @active-account}])))))
