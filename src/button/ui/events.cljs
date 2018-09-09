@@ -65,6 +65,7 @@
  ::button-pressed
  (fn [{:keys [db]} [_ _]]
    (let [account (account-queries/active-account db)]
+     (println "SENDING " account)
      {:dispatch [::web3-tx-events/send-tx
                  {:instance (contract-queries/instance db :button)
                   :fn :press

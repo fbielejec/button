@@ -24,6 +24,7 @@
    {:reagent-render (fn [{:keys [:children :active-account]}]
                       [:div.title-chart {:id "tilechart"}])
     :component-did-mount (fn []
+                           (prn "ACTIVE ACCOUNT IS " active-account)
                            (let [width 1550
                                  height 750
                                  top 200
@@ -62,7 +63,7 @@
                                  (.style "background-color" (fn [d]
 
                                                               (prn (aget d "data" "value"))
-
+                                                              (println "comparing active-account" active-account "with" (aget d "data" "owner"))
                                                               (if (= active-account (aget d "data" "owner"))
                                                                 "#66CC66"
                                                                 (color-scale
@@ -132,6 +133,6 @@
                                         :image-hash image-hash}))
                       []
                       (-> @response :all-tokens))]
-        (when (pos? (count children))
+        (when (and @active-account (pos? (count children)))
          [tile-chart-component {:children children
                                 :active-account @active-account}])))))
