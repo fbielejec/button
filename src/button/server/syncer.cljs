@@ -72,7 +72,7 @@
     (println (str contract-type " " event-type) {:ev ev :a a} ::dispatch-event) 
     (process-event contract-type ev)))
 
-(defn start [{:keys [:initial-param-query] :as opts}]
+(defn start []
   (when-not (web3/connected? @web3)
     (throw (js/Error. "Can't connect to Ethereum node")))
   (let [last-block-number (last-block-number)

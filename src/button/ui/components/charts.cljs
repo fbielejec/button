@@ -66,7 +66,8 @@
                                                               (println "comparing active-account" active-account "with" (aget d "data" "owner"))
                                                               (if (= active-account (aget d "data" "owner"))
                                                                 "#66CC66"
-                                                                (color-scale
+                                                                "#FF6347"
+                                                                #_(color-scale
                                                                  (aget d "data" "value")))))
                                  
                                  (.style "left" (fn [d]
