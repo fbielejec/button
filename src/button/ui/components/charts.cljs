@@ -68,7 +68,7 @@
                                                                 "#66CC66"
                                                                 "#FF6347"
                                                                 #_(color-scale
-                                                                 (aget d "data" "value")))))
+                                                                   (aget d "data" "value")))))
                                  
                                  (.style "left" (fn [d]
                                                   (str (aget d "x0") "px")))
@@ -89,12 +89,14 @@
                                  (.append "img")
                                  (.attr "src"  (fn [d]
                                                  (let [hash (aget d "data" "image-hash")]
-                                                  (if-not (= hash "0x")
-                                                    (str "https://gateway.ipfs.io/ipfs/" hash)
-                                                    "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7")))))
+                                                   (if-not (= hash "0x")
+                                                     (str "https://gateway.ipfs.io/ipfs/" hash)
+                                                     "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"))))
+                                 (.style "width" "100%")
+                                 (.style "height" "auto")
+                                 )
 
                              
-
                              (-> js/d3
                                  (.selectAll ".user-owned-node" )
                                  (.append "input")
@@ -103,21 +105,7 @@
                                  (.attr "type" "file")
 
                                  (.attr "onchange" (fn [d]
-                                                     (str "button.ui.components.charts.on_change(event," (aget d "data" "id") ")")))
-
-
-                                 )
-
-
-                             ))}))
-
-;; <div class="image-upload">
-;;     <label for="file-input">
-;;         <img src="placeholder.jpg"/>
-;;     </label>
-
-;;     <input id="file-input" type="file"/>
-;; </div>
+                                                     (str "button.ui.components.charts.on_change(event," (aget d "data" "id") ")"))))))}))
 
 (defn tile-chart []
   (let [active-account (re-frame/subscribe [::accounts-subs/active-account])
@@ -135,5 +123,5 @@
                       []
                       (-> @response :all-tokens))]
         (when (and @active-account (pos? (count children)))
-         [tile-chart-component {:children children
-                                :active-account @active-account}])))))
+          [tile-chart-component {:children children
+                                 :active-account @active-account}])))))

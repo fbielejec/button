@@ -119,10 +119,15 @@
 (defn gen-dummy-data []
   (swap! @button.server.db/button-db assoc :tokens (sg/generate (s/gen (s/coll-of ::button-token)))))
 
+(defn mine-block []
+  (cljs-web3.evm/mine! @district.server.web3/web3))
+
+(defn press-button [account-number]
+  (district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)
+                                                 :press {:from (nth (cljs-web3.eth/accounts @district.server.web3/web3) account-number)
+                                                         :gas 4000000}))
+
 #_(district.server.smart-contracts/contract :button)
-#_(district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)
-                                                 :press {:from (first (cljs-web3.eth/accounts @district.server.web3/web3))
-                                                         :gas 4000000})
 
 #_(district.server.smart-contracts/contract-call (district.server.smart-contracts/instance :button)
                                                  :set-image-hash 0 "QmQtvPTzQr66uivmquqqKuqZWqqoaDBkiM98sZB8fYLEXM" {:from (first (cljs-web3.eth/accounts @district.server.web3/web3))
